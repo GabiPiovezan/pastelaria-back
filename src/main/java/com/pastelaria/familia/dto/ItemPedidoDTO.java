@@ -12,6 +12,9 @@ public record ItemPedidoDTO (
     @NotBlank(message = "O ID do produto é obrigatório")
     String produtoId,
 
+    @NotBlank(message = "A descrição do item do Pedido é obrigatória")
+    String descricao,
+
     @NotNull(message = "A quantidade é obrigatória")
     @Positive(message = "A quantidade deve ser maior que zero")
     Integer quantidade,

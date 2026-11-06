@@ -24,6 +24,7 @@ public class ItemPedidoMapper {
                 item.getId(),
                 item.getPedidoId(),
                 item.getProdutoId(),
+                item.getDescricao(),
                 item.getQuantidade(),
                 item.getPrecoUnitario()
         );

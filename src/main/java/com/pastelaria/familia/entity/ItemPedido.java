@@ -13,6 +13,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemPedido {
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     public String getId() {
         return id;
     }
@@ -62,6 +70,9 @@ public class ItemPedido {
 
     @Column(name = "produto_id", nullable = false, length = 36)
     private String produtoId;
+
+    @Column(name = "descricao", nullable = false, length = 100)
+    private String descricao;
 
     @Column(nullable = false)
     private Integer quantidade;
