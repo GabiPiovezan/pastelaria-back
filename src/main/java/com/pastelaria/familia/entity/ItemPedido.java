@@ -13,6 +13,45 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemPedido {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPedidoId() {
+        return pedidoId;
+    }
+
+    public void setPedidoId(String pedidoId) {
+        this.pedidoId = pedidoId;
+    }
+
+    public String getProdutoId() {
+        return produtoId;
+    }
+
+    public void setProdutoId(String produtoId) {
+        this.produtoId = produtoId;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public BigDecimal getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
 
     @Id
     @Column(length = 36, nullable = false, updatable = false)

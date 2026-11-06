@@ -14,6 +14,30 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Entrega {
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPedidoId() {
+        return pedidoId;
+    }
+
+    public void setPedidoId(String pedidoId) {
+        this.pedidoId = pedidoId;
+    }
+
+    public LocalDateTime getAtualizadoEm() {
+        return atualizadoEm;
+    }
+
+    public void setAtualizadoEm(LocalDateTime atualizadoEm) {
+        this.atualizadoEm = atualizadoEm;
+    }
+
     @Id
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
