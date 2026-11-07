@@ -13,6 +13,7 @@ public class PedidoMapper {
         pedido.setUsuarioId(dto.usuarioId());
         pedido.setValorTotal(dto.valorTotal());
         pedido.setEnderecoEntrega(dto.enderecoEntrega());
+        pedido.setFormaPagamento(dto.formaPagamento());
         return pedido;
     }
 
@@ -25,7 +26,8 @@ public class PedidoMapper {
                 pedido.getStatus(),
                 pedido.getValorTotal(),
                 pedido.getEnderecoEntrega(),
-                pedido.getCriadoEm()
+                pedido.getCriadoEm(),
+                pedido.getFormaPagamento()
         );
     }
 }

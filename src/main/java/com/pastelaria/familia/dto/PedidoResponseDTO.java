@@ -9,5 +9,6 @@ public record PedidoResponseDTO(
         String status,
         BigDecimal valorTotal,
         String enderecoEntrega,
-        LocalDateTime criadoEm
+        LocalDateTime criadoEm,
+        String formaPagamento
 ) {}

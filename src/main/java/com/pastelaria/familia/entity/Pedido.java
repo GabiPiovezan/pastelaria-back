@@ -19,6 +19,14 @@ public class Pedido {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
     public String getId() {
         return id;
     }
@@ -83,6 +91,9 @@ public class Pedido {
     @Column(name = "criado_em", updatable = false)
     private LocalDateTime criadoEm;
 
+    @Column(name = "forma_pagamento", nullable = false, length = 50)
+    private String formaPagamento;
+
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
@@ -93,6 +104,10 @@ public class Pedido {
         }
         if (this.status == null) {
             this.status = "pendente";
+        }
+
+        if (this.formaPagamento == null) {
+            this.formaPagamento = "PIX";
         }
     }
 }

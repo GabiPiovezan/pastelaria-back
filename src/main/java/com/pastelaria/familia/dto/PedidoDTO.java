@@ -14,5 +14,8 @@ public record PedidoDTO(
         BigDecimal valorTotal,
 
         @NotBlank(message = "O endereço de entrega é obrigatório")
-        String enderecoEntrega
+        String enderecoEntrega,
+
+        @NotBlank(message = "A forma de pagamento é obrigatória")
+        String formaPagamento // Ex: "PIX", "CARTAO_CREDITO", "CARTAO_DEBITO", "DINHEIRO"
 ) {}
