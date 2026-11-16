@@ -18,21 +18,27 @@ public class ProdutoController {
     private ProdutoService produtoService;
 
     @GetMapping
-    public List<Produto> listarProdutos() {
-        return produtoService.listarTodos();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable String id) {
-        Optional<Produto> produto = produtoService.buscarPorId(id);
-        return produto.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<Produto>> listarProdutos(@RequestParam(required = false) String categoria) {
+        if (categoria != null && !categoria.isEmpty()){
+            List<Produto> produtosPorCategoria = produtoService.listarPorCategoria(categoria);
+            return ResponseEntity.ok(produtosPorCategoria);
+        }
+        List<Produto> todosOsProdutos = produtoService.listarTodos();
+        return ResponseEntity.ok(todosOsProdutos);
     }
 
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) {
         Produto novoProduto = produtoService.salvar(produto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoProduto);
+    }
+
+    // Suporta GET e POST para buscar por ID, garantindo compatibilidade retroativa com o frontend
+    @RequestMapping(value = "/{id}", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<Produto> buscarPorId(@PathVariable String id) {
+        Optional<Produto> produto = produtoService.buscarPorId(id);
+        return produto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")

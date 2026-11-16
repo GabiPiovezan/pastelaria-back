@@ -11,7 +11,9 @@ public class EntregaMapper {
 
         Entrega entrega = new Entrega();
         entrega.setPedidoId(dto.pedidoId());
-        entrega.setStatusEntrega(dto.statusEntrega());
+        if (dto.statusEntrega() != null && !dto.statusEntrega().isBlank()) {
+            entrega.setStatusEntrega(dto.statusEntrega());
+        }
         return entrega;
     }
 

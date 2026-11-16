@@ -18,6 +18,10 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
+    public List<Produto> listarPorCategoria(String Categoria){
+        return produtoRepository.findByCategoriaContainingIgnoreCase(Categoria);
+    }
+
     public Optional<Produto> buscarPorId(String id) {
         return produtoRepository.findById(id);
     }

@@ -11,6 +11,7 @@ public class UsuarioMapper {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
+        usuario.setTelefone(dto.telefone());
         usuario.setSenha(dto.senha()); // Será criptografada com BCrypt no service/controller
         usuario.setTipo(dto.tipo() != null ? dto.tipo() : "cliente");
         return usuario;

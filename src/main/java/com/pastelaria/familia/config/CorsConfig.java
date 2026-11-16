@@ -16,8 +16,8 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Libera as origens do front-end (ajuste conforme necessário, ou use List.of("*") para desenvolvimento)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:5500"));
+        // Libera as origens do front-end (qualquer porta de localhost ou 127.0.0.1)
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*", "http://localhost", "http://127.0.0.1"));
 
         // Libera os métodos HTTP padrão
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

@@ -12,6 +12,7 @@ public class ItemPedidoMapper {
         ItemPedido item = new ItemPedido();
         item.setPedidoId(dto.pedidoId());
         item.setProdutoId(dto.produtoId());
+        item.setDescricao(dto.descricao());
         item.setQuantidade(dto.quantidade());
         item.setPrecoUnitario(dto.precoUnitario());
         return item;

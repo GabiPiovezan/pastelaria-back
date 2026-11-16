@@ -10,10 +10,12 @@ public class PedidoMapper {
         if (dto == null) return null;
 
         Pedido pedido = new Pedido();
-        pedido.setUsuarioId(dto.usuarioId());
-        pedido.setValorTotal(dto.valorTotal());
-        pedido.setEnderecoEntrega(dto.enderecoEntrega());
-        pedido.setFormaPagamento(dto.formaPagamento());
+        pedido.setUsuarioId(dto.getUsuarioId());
+        pedido.setValorTotal(dto.getValorTotal());
+        pedido.setEnderecoEntrega(dto.getEnderecoEntrega());
+        pedido.setTipoEntrega(dto.getTipoEntrega());
+        pedido.setTelefone(dto.getTelefone());
+        pedido.setFormaPagamento(dto.getFormaPagamento());
         return pedido;
     }
 

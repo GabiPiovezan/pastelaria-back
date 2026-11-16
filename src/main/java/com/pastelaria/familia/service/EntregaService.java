@@ -29,4 +29,8 @@ public class EntregaService {
     public Entrega salvar(Entrega entrega) {
         return entregaRepository.save(entrega);
     }
+
+    public void deletar(String id) {
+        entregaRepository.deleteById(id);
+    }
 }

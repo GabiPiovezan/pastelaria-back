@@ -30,7 +30,15 @@ public class EntregaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(novaEntrega);
     }
 
-    // 3. Consultar o rastreio da entrega pelo ID do pedido (Cliente)
+    // 3. Consultar a entrega por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Entrega> buscarPorId(@PathVariable String id) {
+        return entregaService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // 4. Consultar o rastreio da entrega pelo ID do pedido (Cliente)
     @GetMapping("/pedido/{pedidoId}")
     public ResponseEntity<Entrega> buscarPorPedidoId(@PathVariable String pedidoId) {
         Optional<Entrega> entrega = entregaService.buscarPorPedidoId(pedidoId);
@@ -38,7 +46,7 @@ public class EntregaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 4. Atualizar o status da entrega
+    // 5. Atualizar o status da entrega
     @PutMapping("/{id}")
     public ResponseEntity<Entrega> atualizarStatusEntrega(@PathVariable String id, @RequestBody Entrega entregaAtualizada) {
         Optional<Entrega> entregaOpt = entregaService.buscarPorId(id);
@@ -47,6 +55,16 @@ public class EntregaController {
             entrega.setStatusEntrega(entregaAtualizada.getStatusEntrega());
             Entrega salva = entregaService.salvar(entrega);
             return ResponseEntity.ok(salva);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // 6. Deletar entrega
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarEntrega(@PathVariable String id) {
+        if (entregaService.buscarPorId(id).isPresent()) {
+            entregaService.deletar(id);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }

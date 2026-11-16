@@ -1,6 +1,7 @@
 package com.pastelaria.familia.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,44 @@ public class Pedido {
     @Column(length = 36, nullable = false, updatable = false)
     private String id;
 
-    public String getFormaPagamento() {
-        return formaPagamento;
-    }
+    @Column(name = "usuario_id", length = 36)
+    private String usuarioId;
 
-    public void setFormaPagamento(String formaPagamento) {
-        this.formaPagamento = formaPagamento;
+    @Column(nullable = false, length = 30)
+    private String status = "pendente"; // pendente, em_preparo, saindo_para_entrega, entregue, cancelado
+
+    @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
+    private BigDecimal valorTotal;
+
+    @Column(name = "endereco_entrega", columnDefinition = "TEXT")
+    private String enderecoEntrega;
+
+    @Column(name = "tipo_entrega", length = 30)
+    private String tipoEntrega; // DELIVERY ou RETIRADA
+
+    @Column(length = 20)
+    private String telefone;
+
+    @Column(name = "forma_pagamento", nullable = false, length = 50)
+    private String formaPagamento;
+
+    @Column(name = "criado_em", updatable = false)
+    private LocalDateTime criadoEm;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+        if (this.criadoEm == null) {
+            this.criadoEm = LocalDateTime.now();
+        }
+        if (this.status == null) {
+            this.status = "pendente";
+        }
+        if (this.formaPagamento == null) {
+            this.formaPagamento = "PIX";
+        }
     }
 
     public String getId() {
@@ -39,10 +72,6 @@ public class Pedido {
         return usuarioId;
     }
 
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -55,16 +84,20 @@ public class Pedido {
         return valorTotal;
     }
 
-    public void setValorTotal(BigDecimal valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
     public String getEnderecoEntrega() {
         return enderecoEntrega;
     }
 
-    public void setEnderecoEntrega(String enderecoEntrega) {
-        this.enderecoEntrega = enderecoEntrega;
+    public String getTipoEntrega() {
+        return tipoEntrega;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public String getFormaPagamento() {
+        return formaPagamento;
     }
 
     public LocalDateTime getCriadoEm() {
@@ -73,41 +106,5 @@ public class Pedido {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
-    }
-
-    // Relação N:1 - Muitos pedidos podem pertencer a um usuário
-    @Column(name = "usuario_id", nullable = false, length = 36)
-    private String usuarioId;
-
-    @Column(nullable = false, length = 30)
-    private String status = "pendente"; // pendente, em_preparo, saindo_para_entrega, entregue, cancelado
-
-    @Column(name = "valor_total", nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorTotal;
-
-    @Column(name = "endereco_entrega", nullable = false, columnDefinition = "TEXT")
-    private String enderecoEntrega;
-
-    @Column(name = "criado_em", updatable = false)
-    private LocalDateTime criadoEm;
-
-    @Column(name = "forma_pagamento", nullable = false, length = 50)
-    private String formaPagamento;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID().toString();
-        }
-        if (this.criadoEm == null) {
-            this.criadoEm = LocalDateTime.now();
-        }
-        if (this.status == null) {
-            this.status = "pendente";
-        }
-
-        if (this.formaPagamento == null) {
-            this.formaPagamento = "PIX";
-        }
     }
 }

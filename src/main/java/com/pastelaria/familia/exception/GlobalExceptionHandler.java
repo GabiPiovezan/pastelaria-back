@@ -1,6 +1,5 @@
 package com.pastelaria.familia.exception;
 
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -32,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object>handleResourceNotFoundException(ResourceNotFoundException ex){
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         Map<String, Object> resposta = new HashMap<>();
         resposta.put("timestamp", LocalDateTime.now());
         resposta.put("status", HttpStatus.NOT_FOUND.value());
@@ -40,12 +39,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resposta);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("timestamp", LocalDateTime.now());
+        resposta.put("status", HttpStatus.BAD_REQUEST.value());
+        resposta.put("mensagem", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handRuntimeException(RuntimeException ex){
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> resposta = new HashMap<>();
         resposta.put("timestamp", LocalDateTime.now());
         resposta.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        resposta.put("mensagem", ex.getMessage());
+        String msg = (ex.getMessage() != null && !ex.getMessage().toLowerCase().contains("sql") && !ex.getMessage().toLowerCase().contains("hibernate"))
+                ? ex.getMessage()
+                : "Ocorreu um erro interno no processamento da solicitação.";
+        resposta.put("mensagem", msg);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resposta);
     }
 }

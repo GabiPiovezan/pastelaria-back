@@ -1,21 +1,42 @@
 package com.pastelaria.familia.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
+import java.util.List;
 
-public record PedidoDTO(
-        @NotBlank(message = "O ID do usuário é obrigatório")
-        String usuarioId,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PedidoDTO {
+    private String usuarioId;
 
-        @NotNull(message = "O valor total é obrigatório")
-        @Positive(message = "O valor total deve ser positivo")
-        BigDecimal valorTotal,
+    private BigDecimal valorTotal;
 
-        @NotBlank(message = "O endereço de entrega é obrigatório")
-        String enderecoEntrega,
+    @JsonProperty("endereco")
+    @NotBlank(message = "O endereço de entrega é obrigatório")
+    private String enderecoEntrega;
 
-        @NotBlank(message = "A forma de pagamento é obrigatória")
-        String formaPagamento // Ex: "PIX", "CARTAO_CREDITO", "CARTAO_DEBITO", "DINHEIRO"
-) {}
+    @NotBlank(message = "O tipo de entrega é obrigatório")
+    private String tipoEntrega;
+
+    @NotBlank(message = "O telefone é obrigatório")
+    private String telefone;
+
+    @NotBlank(message = "A forma de pagamento é obrigatória")
+    private String formaPagamento;
+
+    private List<ItemPedidoDTO> itens;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ItemPedidoDTO {
+        private String idProduto;
+        private Integer quantidade;
+    }
+}

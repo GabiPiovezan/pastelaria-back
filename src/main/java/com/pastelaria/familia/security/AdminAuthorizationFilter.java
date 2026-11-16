@@ -23,42 +23,61 @@ public class AdminAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Permite requisições OPTIONS (CORS preflight) passarem sem bloqueio
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        boolean isProtectedProdutoRoute = path.startsWith("/api/produtos") && !method.equals("GET");
+        // Verifica se é uma requisição de consulta de produto por ID (seja via GET ou POST)
+        boolean isConsultaProdutoPorId = path.matches(".*/api/produtos/[^/]+$") && ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
 
-        if (isProtectedProdutoRoute) {
+        // Rota de alteração de produto: POST (novo produto), PUT, DELETE
+        boolean isProtectedProdutoRoute = path.contains("/api/produtos") 
+                && !"GET".equalsIgnoreCase(method) 
+                && !isConsultaProdutoPorId;
+
+        // Rota de criação/modificação de categorias
+        boolean isProtectedCategoriaRoute = path.contains("/api/categorias") && !"GET".equalsIgnoreCase(method);
+
+        // Ações destrutivas ou administrativas em usuários, pedidos e entregas
+        boolean isProtectedAdminAction = 
+                (path.contains("/api/usuarios") && "DELETE".equalsIgnoreCase(method)) ||
+                (path.contains("/api/pedidos") && "DELETE".equalsIgnoreCase(method)) ||
+                (path.contains("/api/entregas") && ("DELETE".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)));
+
+        boolean isProtected = isProtectedProdutoRoute || isProtectedCategoriaRoute || isProtectedAdminAction;
+
+        if (isProtected) {
             String adminEmail = request.getHeader("X-Admin-Email");
-            System.out.println("DEBUG - Rota protegida acessada. Email recebido no header: " + adminEmail);
 
-            if (adminEmail == null) {
-                System.out.println("DEBUG - Falha: Cabeçalho 'X-Admin-Email' ausente.");
+            if (adminEmail == null || adminEmail.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Acesso negado: Cabecalho 'X-Admin-Email' ausente.");
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"erro\": \"Acesso negado: Cabecalho 'X-Admin-Email' ausente.\"}");
                 return;
             }
 
             Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(adminEmail);
 
             if (usuarioOpt.isEmpty()) {
-                System.out.println("DEBUG - Falha: Usuário não encontrado no banco com o email: " + adminEmail);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Acesso negado: Usuario nao encontrado.");
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"erro\": \"Acesso negado: Usuario nao encontrado.\"}");
                 return;
             }
 
             Usuario usuario = usuarioOpt.get();
-            System.out.println("DEBUG - Usuário encontrado. Tipo no banco: " + usuario.getTipo());
 
             if (!"admin".equalsIgnoreCase(usuario.getTipo())) {
-                System.out.println("DEBUG - Falha: O usuário não é admin (tipo é: " + usuario.getTipo() + ")");
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Acesso negado: Apenas administradores podem realizar esta acao.");
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"erro\": \"Acesso negado: Apenas administradores podem realizar esta acao.\"}");
                 return;
             }
-
-            System.out.println("DEBUG - Sucesso! Acesso de administrador autorizado.");
         }
 
         filterChain.doFilter(request, response);
