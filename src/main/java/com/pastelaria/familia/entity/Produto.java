@@ -33,6 +33,9 @@ public class Produto {
     @Column(nullable = false)
     private Boolean disponivel = true;
 
+    @Column(name = "imagem_url", length = 500)
+    private String imagemUrl;
+
     // Método auxiliar para gerar o UUID automaticamente antes de salvar, caso venha vazio
     @PrePersist
     public void prePersist() {
@@ -87,6 +90,14 @@ public class Produto {
 
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
+    }
+
+    public String getImagemUrl() {
+        return imagemUrl;
+    }
+
+    public void setImagemUrl(String imagemUrl) {
+        this.imagemUrl = imagemUrl;
     }
 
 }

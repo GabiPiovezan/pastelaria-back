@@ -20,5 +20,7 @@ public record ProdutoDTO(
         @NotBlank(message = "A categoria é obrigatória")
         String categoria,
 
-        Boolean disponivel
+        Boolean disponivel,
+
+        String imagemUrl
 ) {}

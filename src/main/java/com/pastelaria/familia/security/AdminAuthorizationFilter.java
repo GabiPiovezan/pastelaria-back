@@ -32,13 +32,15 @@ public class AdminAuthorizationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        // Verifica se é uma requisição de consulta de produto por ID (seja via GET ou POST)
+        // Endpoints públicos de produtos: leituras via GET e busca retrocompatível por ID
         boolean isConsultaProdutoPorId = path.matches(".*/api/produtos/[^/]+$") && ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
 
-        // Rota de alteração de produto: POST (novo produto), PUT, DELETE
-        boolean isProtectedProdutoRoute = path.contains("/api/produtos") 
-                && !"GET".equalsIgnoreCase(method) 
-                && !isConsultaProdutoPorId;
+        // Upload de imagem (/api/produtos/{id}/imagem) exige estritamente perfil de ADMIN
+        boolean isUploadImagemProduto = path.matches(".*/api/produtos/[^/]+/imagem/?$") && "POST".equalsIgnoreCase(method);
+
+        // Rotas administrativas de produtos: criação, atualização, exclusão e upload de imagem
+        boolean isProtectedProdutoRoute = (path.contains("/api/produtos") && !"GET".equalsIgnoreCase(method) && !isConsultaProdutoPorId)
+                || isUploadImagemProduto;
 
         // Rota de criação/modificação de categorias
         boolean isProtectedCategoriaRoute = path.contains("/api/categorias") && !"GET".equalsIgnoreCase(method);
@@ -72,7 +74,8 @@ public class AdminAuthorizationFilter extends OncePerRequestFilter {
 
             Usuario usuario = usuarioOpt.get();
 
-            if (!"admin".equalsIgnoreCase(usuario.getTipo())) {
+            String tipo = usuario.getTipo();
+            if (tipo == null || (!"admin".equalsIgnoreCase(tipo) && !"administrador".equalsIgnoreCase(tipo))) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"erro\": \"Acesso negado: Apenas administradores podem realizar esta acao.\"}");

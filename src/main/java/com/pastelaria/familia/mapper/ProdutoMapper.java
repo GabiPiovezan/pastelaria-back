@@ -16,6 +16,7 @@ public class ProdutoMapper {
         produto.setPreco(dto.preco());
         produto.setCategoria(dto.categoria());
         produto.setDisponivel(dto.disponivel() != null ? dto.disponivel() : true);
+        produto.setImagemUrl(dto.imagemUrl());
         return produto;
     }
 
@@ -29,7 +30,8 @@ public class ProdutoMapper {
                 produto.getDescricao(),
                 produto.getPreco(),
                 produto.getCategoria(),
-                produto.getDisponivel()
+                produto.getDisponivel(),
+                produto.getImagemUrl()
         );
     }
 }
