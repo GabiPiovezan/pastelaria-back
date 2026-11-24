@@ -22,7 +22,7 @@ public class CorsConfig {
                 "http://127.0.0.1:*",
                 "http://localhost",
                 "http://127.0.0.1",
-                "https://HRafa20.github.io"
+                "https://hrafa20.github.io"
         ));
 
         // Libera os métodos HTTP padrão
