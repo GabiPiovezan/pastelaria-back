@@ -25,4 +25,13 @@ public class CategoriaController {
         Categoria novaCategoria = categoriaService.salvar(categoria);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaCategoria);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarCategoria(@PathVariable Long id) {
+        if (categoriaService.buscarPorId(id).isPresent()) {
+            categoriaService.deletar(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
